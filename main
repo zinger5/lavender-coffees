@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lavender Coffees</title>
+  <script>
+ body {
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+     background-size: cover;
+     color: #4b2e39;
+     padding: 40px;
+     max-width: 600px;
+     margin: auto;
+     text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+   }
+
+
+   form {
+     background-color: rgba(255, 255, 255, 0.93);
+     padding: 25px;
+     border-radius: 12px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+   }
+
+
+   h1 {
+     text-align: center;
+     color: #7e4a66;
+     font-size: 2.5em;
+     margin-bottom: 30px;
+     text-shadow: 1px 1px 2px #fff;
+   }
+
+
+   label {
+     font-weight: bold;
+     display: block;
+     margin-bottom: 6px;
+     color: #5d3b4a;
+   }
+
+
+   select,
+   input[type='text'],
+   input[type='submit'] {
+     width: 100%;
+     padding: 10px;
+     margin-bottom: 20px;
+     border: 1px solid #ccc;
+     border-radius: 8px;
+     font-size: 1em;
+     box-sizing: border-box;
+     transition: border-color 0.3s, box-shadow 0.3s;
+   }
+
+
+   select:focus,
+   input[type='text']:focus {
+     border-color: #c18cb0;
+     outline: none;
+     box-shadow: 0 0 8px #d4a5c1;
+   }
+
+
+   input[type='radio'],
+   input[type='checkbox'] {
+     margin-right: 8px;
+     transform: scale(1.1);
+     vertical-align: middle;
+     cursor: pointer;
+   }
+
+
+   .radio-group label {
+     display: flex;
+     align-items: center;
+     margin-bottom: 10px;
+     cursor: pointer;
+   }
+
+
+   input[type='submit'] {
+     background-color: #7e4a66;
+     color: white;
+     border: none;
+     cursor: pointer;
+     transition: background-color 0.3s ease;
+   }
+
+
+   input[type='submit']:hover {
+     background-color: #9b5c81;
+   }
+
+
+   @media (max-width: 600px) {
+     body {
+       padding: 20px;
+     }
+
+
+     h1 {
+       font-size: 2em;
+     }
+   }
+  </script>
+</head>
+<body>
+<script>
+ document.addEventListener('DOMContentLoaded', () => {
+   const form = document.querySelector('form');
+
+
+   form.addEventListener('submit', function(event) {
+     event.preventDefault(); // Stop default submit for now
+
+
+     const coffee = document.getElementById('coffee').value;
+     const strength = document.getElementById('strength').value;
+     const extras = document.querySelector('input[name="extras"]:checked')?.value || 'None';
+     const name = document.getElementById('name').value.trim();
+     const location = document.getElementById('location').value.trim();
+
+
+     // Validate required fields
+     if (!coffee || !strength || !name || !location) {
+       alert('Please fill in all required fields.');
+       return;
+     }
+
+
+     // Optional alert summary (remove if you want)
+     alert(`
+       Thank you, ${name}!
+       Your order for a ${strength} ${coffee} with ${extras} will be ready soon.
+       Pickup location: ${location}.
+     `);
+
+
+     // Hide the form
+     form.style.display = 'none';
+
+
+     // Create and show confirmation message
+     const confirmation = document.createElement('div');
+     confirmation.innerHTML = `
+       <h2>Order Sent!</h2>
+       <p>Thank you, <strong>${name}</strong>! Your order for a <strong>${strength} ${coffee}</strong> with <strong>${extras}</strong> will be ready soon.</p>
+       <p>Pickup location: <strong>${location}</strong>.</p>
+     `;
+
+
+     // Style the confirmation div
+     confirmation.style.padding = '20px';
+     confirmation.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+     confirmation.style.borderRadius = '12px';
+     confirmation.style.color = '#4b2e39';
+     confirmation.style.textAlign = 'center';
+
+
+     // Append confirmation after the form
+     form.parentNode.appendChild(confirmation);
+
+
+     // Actually submit the form to Formsubmit.co
+     form.submit();
+   });
+ });
+</script>
+
+
+
+
+CSS
+<head>
+ <meta charset="UTF-8" />
+ <title>Lavender Coffees</title>
+ <style>
+   /* Background and Page Setup */
+   body {
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+     background-size: cover;
+     color: #4b2e39;
+     padding: 40px;
+     max-width: 600px;
+     margin: auto;
+     /* To help text stand out */
+     text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+   }
+
+
+   /* Form container with translucent background */
+   form {
+     background-color: rgba(255, 255, 255, 0.93);
+     padding: 25px;
+     border-radius: 12px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+   }
+
+
+   h1 {
+     text-align: center;
+     color: #7e4a66;
+     font-size: 2.5em;
+     margin-bottom: 30px;
+     text-shadow: 1px 1px 2px #fff;
+   }
+
+
+   label {
+     font-weight: bold;
+     display: block;
+     margin-bottom: 6px;
+     color: #5d3b4a;
+   }
+
+
+   select,
+   input[type='text'],
+   input[type='submit'] {
+     width: 100%;
+     padding: 10px;
+     margin-bottom: 20px;
+     border: 1px solid #ccc;
+     border-radius: 8px;
+     font-size: 1em;
+     box-sizing: border-box;
+     transition: border-color 0.3s, box-shadow 0.3s;
+   }
+
+
+   select:focus,
+   input[type='text']:focus {
+     border-color: #c18cb0;
+     outline: none;
+     box-shadow: 0 0 8px #d4a5c1;
+   }
+
+
+   input[type='radio'] {
+     margin-right: 8px;
+     transform: scale(1.1);
+     vertical-align: middle;
+     cursor: pointer;
+   }
+
+
+   /* Radio labels inline */
+   .radio-group label {
+     display: flex;
+     align-items: center;
+     margin-bottom: 10px;
+     cursor: pointer;
+   }
+
+
+   input[type='submit'] {
+     background-color: #7e4a66;
+     color: white;
+     border: none;
+     cursor: pointer;
+     transition: background-color 0.3s ease;
+   }
+
+
+   input[type='submit']:hover {
+     background-color: #9b5c81;
+   }
+
+
+   /* Responsive */
+   @media (max-width: 600px) {
+     body {
+       padding: 20px;
+     }
+
+
+     h1 {
+       font-size: 2em;
+     }
+   }
+ </style>
+</head>
+
+<h1>Lavender Coffees</h1>
+
+
+ <form action="https://formsubmit.co/cmurphy@lavender.enfield.sch.uk" method="POST">
+
+
+   <!-- Coffee Type -->
+   <label for="coffee">Select Coffee Type:</label>
+   <select name="coffee" id="coffee" required>
+     <option value="">--Please choose--</option>
+     <option value="Latte">Latte</option>
+     <option value="Cappuccino">Cappuccino</option>
+     <option value="Americano">Americano</option>
+     <option value="Espresso Shot">Espresso Shot</option>
+     <option value="Flat White">Flat White</option>
+     <option value="Macchiato">Macchiato</option>
+     <option value="Cortado">Cortado</option>
+     <option value="Chai Latte With Espresso">Chai Latte With Espresso</option>
+     <option value="Classic Mocha With Chocolate Froth">Classic Mocha With Chocolate Froth</option>
+     <option value="Affogato With Vanilla Ice Cream">Affogato With Vanilla Ice Cream</option>
+     <option value="Espresso Martini (Contains Alcohol)">Espresso Martini (Contains Alcohol)</option>
+     <option value="Irish Coffee">Irish Coffee</option>
+     <option value="Cold Brew">Cold Brew</option>
+     <option value="Iced Latte">Iced Latte</option>
+   </select>
+
+
+   <!-- Strength -->
+   <label for="strength">Select Strength:</label>
+   <select name="strength" id="strength" required>
+     <option value="">--Please choose--</option>
+     <option value="Single">Single</option>
+     <option value="Double">Double</option>
+   </select>
+
+
+   <!-- Froth -->
+   <label>Froth:</label>
+   <input type="radio" id="steamed" name="froth" value="Steamed Milk">
+   <label for="steamed">Steamed Milk</label><br>
+
+
+   <input type="radio" id="thin" name="froth" value="Thin Froth">
+   <label for="thin">Thin Froth</label><br>
+
+
+   <input type="radio" id="thick" name="froth" value="Thick Froth">
+   <label for="thick">Thick Froth</label><br>
+
+
+   <input type="radio" id="extra thick" name="froth" value="Extra Thick Froth">
+   <label for="extra">Extra Thick Froth</label><br>
+
+
+   <input type="radio" id="cold" name="froth" value="Cold Froth">
+   <label for="cold">Cold Froth</label><br><br>
+
+
+   <!-- Name -->
+   <label for="name">Your Name:</label>
+   <input type="text" id="name" name="name" required>
+
+
+   <!-- Location -->
+   <label for="location">Location:</label>
+   <input type="text" id="location" name="location" required>
+
+
+   <!-- Day -->
+   <label for="day">Day Of The Week You Would Like To Have Your Coffee Delivered:</label>
+   <input type="text" id="day" name="day" required>
+
+
+   <!-- Decaf -->
+   <label for="decafe">Tick for Decaf:</label>
+   <input type="checkbox" id="decafe" name="decafe" value="Yes">
+
+
+   <!-- FormSubmit settings -->
+   <input type="hidden" name="_captcha" value="false">
+   <!-- <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html"> -->
+
+
+   <input type="submit" value="Place Order">
+
+
+ </form>
+</body>
+</html>
