@@ -143,8 +143,8 @@
           "Cold Brew(Foam)": 0.70
         },
         strength: {
-          "Single": 0.15,
-          "Double": 0.25
+          "Single": 0.5,
+          "Double": 0.10
         },
         },
         }
@@ -185,8 +185,7 @@
         html += `<p><strong>Name:</strong> ${customer}</p>`;
         html += `<p><strong>Coffee:</strong> ${coffeeType}</p>`;
         html += `<p><strong>Strength:</strong> ${strength}</p>`;
-        html += `<p><strong>Size:</strong> ${size}</p>`;
-        html += `<p><strong>Froth:</strong> ${selectedFroths.length ? selectedFroths.join(", ") : "None"}</p>`;
+        html += `<p><strong>Size:</strong> ${size}</p>;
         html += `<p><strong>Total Price:</strong> <span style="color: #7e4a66;">$${basePrice.toFixed(2)}</span></p>`;
         summary.innerHTML = html;
       });
