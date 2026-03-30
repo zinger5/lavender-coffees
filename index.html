@@ -1,22 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Pricing</title>
+<meta charset="UTF-8">
+<title>Lavender Coffees</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1500&q=80')
+  no-repeat center center fixed;
+  background-size: cover;
+  padding: 40px;
+  max-width: 600px;
+  margin: auto;
+}
+
+form {
+  background: rgba(255,255,255,0.95);
+  padding: 25px;
+  border-radius: 12px;
+}
+
+h1 {
+  text-align: center;
+  color: #7e4a66;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+select, input, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+button {
+  background: #7e4a66;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#price-display {
+  font-size: 1.3em;
+  font-weight: bold;
+  text-align: center;
+  margin: 15px 0;
+  color: #7e4a66;
+}
+
+#result {
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+}
+</style>
 </head>
+
 <body>
-    <h1>Coffee Strength Pricing</h1>
-    <form>
-        <label for="strength">Select your coffee strength:</label><br>
-        <input type="radio" id="single" name="strength" value="0.05">
-        <label for="single">Single ($0.05)</label><br>
-        <input type="radio" id="double" name="strength" value="0.10">
-        <label for="double">Double ($0.10)</label><br><br>
-        <label for="email">Enter your email:</label><br>
-        <input type="email" id="email" name="email" required>
-        <br><br>
-        <input type="submit" value="Order Now">
-    </form>
+
+<h1>Lavender Coffees </h1>
+
+<form id="form">
+
+<label>Coffee Type</label>
+<select name="coffee" required>
+  <option value="">--Select--</option>
+  <option>Latte</option>
+  <option>Cappuccino</option>
+  <option>Americano</option>
+  <option>Flat White</option>
+  <option>Chocolate Mocha</option>
+  <option>Cortado</option>
+  <option>Macchiato</option>
+  <option>Cold Brew (No Foam)</option>
+  <option>Cold Brew (Foam)</option>
+</select>
+
+<label>Strength</label>
+<select name="strength" required>
+  <option value="">--Select--</option>
+  <option>Single</option>
+  <option>Double</option>
+</select>
+
+<label>Temperature</label>
+<select name="temp" required>
+  <option value="">--Select--</option>
+  <option>Hot</option>
+  <option>Iced</option>
+</select>
+
+<label>Name</label>
+<input name="name" required>
+
+<label>Location</label>
+<input name="location" required>
+
+<label>Day</label>
+<input name="day" required>
+
+<label><input type="checkbox" name="decaf"> Decaf</label>
+
+<div id="price-display">Total: £0.00</div>
+
+<button type="submit">Place Order</button>
+
+</form>
+
+<div id="result"></div>
+
+<script>
+const prices = {
+  coffee: {
+    Latte: 0.65,
+    Cappuccino: 0.70,
+    Americano: 0.45,
+    "Flat White": 0.65,
+    "Chocolate Mocha": 0.80,
+    Cortado: 0.60,
+    Macchiato: 0.40,
+    "Cold Brew (No Foam)": 0.50,
+    "Cold Brew (Foam)": 0.80
+  },
+  strength: {
+    Single: 0.05,
+    Double: 0.10
+  },
+  temp: {
+    Hot: 0,
+    Iced: 0.10
+  }
+};
+
+const form = document.getElementById("form");
+const priceDisplay = document.getElementById("price-display");
+
+// 🔄 LIVE PRICE FUNCTION
+function updatePrice() {
+  const data = new FormData(form);
+
+  const coffee = data.get("coffee");
+  const strength = data.get("strength");
+  const temp = data.get("temp");
+
+  let total =
+    (prices.coffee[coffee] || 0) +
+    (prices.strength[strength] || 0) +
+    (prices.temp[temp] || 0);
+
+  priceDisplay.textContent = `Total: £${total.toFixed(2)}`;
+}
+
+// Listen for changes
+form.addEventListener("change", updatePrice);
+
+// 🚀 SUBMIT
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const data = new FormData(form);
+
+  const order = {
+    name: data.get("name"),
+    coffee: data.get("coffee"),
+    strength: data.get("strength"),
+    temp: data.get("temp"),
+    decaf: data.get("decaf") ? "Yes" : "No",
+    location: data.get("location"),
+    day: data.get("day")
+  };
+
+  // Validation
+  if (!order.coffee || !order.strength || !order.temp) {
+    alert("Please select all options");
+    return;
+  }
+
+  order.total =
+    (prices.coffee[order.coffee] || 0) +
+    (prices.strength[order.strength] || 0) +
+    (prices.temp[order.temp] || 0);
+
+  order.total = order.total.toFixed(2);
+
+  const res = await fetch("/order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(order)
+  });
+
+  const result = await res.json();
+
+  document.getElementById("result").innerHTML = `
+    <h3>✅ Order Complete</h3>
+    <p><strong>Order #:</strong> ${result.orderId}</p>
+    <p><strong>Total:</strong> £${order.total}</p>
+    <a href="/receipt/${result.pdf}" target="_blank">📄 Download PDF Receipt</a>
+  `;
+});
+</script>
+
 </body>
 </html>
