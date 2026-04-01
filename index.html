@@ -1,211 +1,684 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Lavender Coffees</title>
+  <meta charset="UTF-8">
+  <title>Lavender Coffees</title>
 
-<style>
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1500&q=80')
-  no-repeat center center fixed;
-  background-size: cover;
-  padding: 40px;
-  max-width: 600px;
-  margin: auto;
-}
+  <!-- Custom lavender-ish font -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
-form {
-  background: rgba(255,255,255,0.95);
-  padding: 25px;
-  border-radius: 12px;
-}
+  <style>
+    :root {
+      --lavender-dark: #7e4a66;
+      --lavender-light: #f5e9f7;
+      --error: #c0392b;
+      --success: #2ecc71;
+    }
 
-h1 {
-  text-align: center;
-  color: #7e4a66;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
-}
+    body {
+      font-family: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1500&q=80')
+        no-repeat center center fixed;
+      background-size: cover;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+      overflow-x: hidden;
+      animation: fadeInBody 0.8s ease-out;
+    }
 
-select, input, button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-}
+    /* Soft lavender gradient overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), transparent),
+                  linear-gradient(to bottom right, rgba(126, 74, 102, 0.45), rgba(245, 233, 247, 0.7));
+      pointer-events: none;
+      z-index: -1;
+    }
 
-button {
-  background: #7e4a66;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+    @keyframes fadeInBody {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-#price-display {
-  font-size: 1.3em;
-  font-weight: bold;
-  text-align: center;
-  margin: 15px 0;
-  color: #7e4a66;
-}
+    /* Floating “lavender aroma” particles */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
 
-#result {
-  margin-top: 20px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-}
-</style>
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+      animation: floatUp 12s linear infinite;
+      opacity: 0.7;
+    }
+
+    .particle:nth-child(2) { left: 20%; animation-duration: 14s; animation-delay: 2s; }
+    .particle:nth-child(3) { left: 40%; animation-duration: 16s; animation-delay: 4s; }
+    .particle:nth-child(4) { left: 60%; animation-duration: 18s; animation-delay: 1s; }
+    .particle:nth-child(5) { left: 80%; animation-duration: 20s; animation-delay: 3s; }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 0.8; }
+      50%  { transform: translateY(50vh) translateX(-10px); }
+      100% { transform: translateY(-10vh) translateX(10px); opacity: 0; }
+    }
+
+    form {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(4px);
+      transition: padding 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--lavender-dark);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 10px;
+      color: #444;
+    }
+
+    .field-wrapper {
+      margin-bottom: 12px;
+    }
+
+    select,
+    input,
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    select:focus,
+    input:focus {
+      outline: none;
+      border-color: var(--lavender-dark);
+      box-shadow: 0 0 0 2px rgba(126, 74, 102, 0.2);
+    }
+
+    .error {
+      border-color: var(--error) !important;
+    }
+
+    .helper {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 2px;
+      min-height: 14px;
+    }
+
+    .helper.error-text {
+      color: var(--error);
+    }
+
+    button {
+      background: var(--lavender-dark);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-top: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Button hover effects */
+    button::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.4), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.4s ease;
+    }
+
+    button:hover::after {
+      left: 120%;
+    }
+
+    button:hover {
+      background: #9a5b7f;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #b9a4b3;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    #price-display {
+      font-size: 1.3em;
+      font-weight: bold;
+      text-align: center;
+      margin: 15px 0;
+      color: var(--lavender-dark);
+      padding: 8px 0;
+      border-radius: 8px;
+      background: rgba(245, 233, 247, 0.7);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    /* Smooth transition when price updates */
+    #price-display.updated {
+      background-color: #ffeefc;
+      transform: scale(1.02);
+    }
+
+    #result {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .progress-container {
+      margin-bottom: 15px;
+    }
+
+    .progress-label {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #c58ad0, #7e4a66);
+      transition: width 0.3s ease;
+    }
+
+    .summary-box {
+      background: #fdf7ff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      border: 1px solid #ead5f0;
+      margin-top: 10px;
+    }
+
+    .summary-title {
+      font-weight: 600;
+      color: var(--lavender-dark);
+      margin-bottom: 4px;
+    }
+
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .secondary-btn {
+      background: white;
+      color: var(--lavender-dark);
+      border: 1px solid var(--lavender-dark);
+    }
+
+    .secondary-btn:hover {
+      background: #f7edf8;
+    }
+
+    .status-text {
+      font-size: 0.85rem;
+      margin-top: 6px;
+      color: #555;
+    }
+
+    .status-text.success {
+      color: var(--success);
+    }
+
+    .status-text.error {
+      color: var(--error);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+
+      form {
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <!-- Floating aroma particles -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
 
-<h1>Lavender Coffees </h1>
+  <h1>Lavender Coffees</h1>
+  <p class="subtitle">A gentle cup, a tiny ritual. Build your drink just how you like it.</p>
 
-<form id="form">
+  <form id="form" novalidate>
+    <div class="progress-container">
+      <div class="progress-label">Order progress</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
 
-<label>Coffee Type</label>
-<select name="coffee" required>
-  <option value="">--Select--</option>
-  <option>Latte</option>
-  <option>Cappuccino</option>
-  <option>Americano</option>
-  <option>Flat White</option>
-  <option>Chocolate Mocha</option>
-  <option>Cortado</option>
-  <option>Macchiato</option>
-  <option>Cold Brew (No Foam)</option>
-  <option>Cold Brew (Foam)</option>
-</select>
+    <div class="field-wrapper">
+      <label>☕ Coffee Type</label>
+      <select name="coffee" required>
+        <option value="">--Select--</option>
+        <option>Latte</option>
+        <option>Cappuccino</option>
+        <option>Americano</option>
+        <option>Flat White</option>
+        <option>Chocolate Mocha</option>
+        <option>Cortado</option>
+        <option>Macchiato</option>
+        <option>Cold Brew (No Foam)</option>
+        <option>Cold Brew (Foam)</option>
+      </select>
+      <div class="helper" data-helper-for="coffee">Choose your base drink.</div>
+    </div>
 
-<label>Strength</label>
-<select name="strength" required>
-  <option value="">--Select--</option>
-  <option>Single</option>
-  <option>Double</option>
-</select>
+    <div class="field-wrapper">
+      <label>Strength</label>
+      <select name="strength" required>
+        <option value="">--Select--</option>
+        <option>Single</option>
+        <option>Double</option>
+      </select>
+      <div class="helper" data-helper-for="strength">Single is gentler, double is bolder.</div>
+    </div>
 
-<label>Temperature</label>
-<select name="temp" required>
-  <option value="">--Select--</option>
-  <option>Hot</option>
-  <option>Iced</option>
-</select>
+    <div class="field-wrapper">
+      <label>Temperature</label>
+      <select name="temp" required>
+        <option value="">--Select--</option>
+        <option>Hot</option>
+        <option>Iced</option>
+      </select>
+      <div class="helper" data-helper-for="temp">Hot for cozy, iced for refreshing.</div>
+    </div>
 
-<label>Name</label>
-<input name="name" required>
+    <div class="field-wrapper">
+      <label>Name</label>
+      <input name="name" required>
+      <div class="helper" data-helper-for="name">What should we call out when it’s ready?</div>
+    </div>
 
-<label>Location</label>
-<input name="location" required>
+    <div class="field-wrapper">
+      <label>Location</label>
+      <input name="location" required>
+      <div class="helper" data-helper-for="location">e.g. “London shop”, “Home delivery”, or a table number.</div>
+    </div>
 
-<label>Day</label>
-<input name="day" required>
+    <div class="field-wrapper">
+      <label>Day</label>
+      <input name="day" required placeholder="e.g. Today, Tomorrow, Friday">
+      <div class="helper" data-helper-for="day">When is this for?</div>
+    </div>
 
-<label><input type="checkbox" name="decaf"> Decaf</label>
+    <div class="field-wrapper">
+      <label>
+        <input type="checkbox" name="decaf">
+        Decaf
+      </label>
+      <div class="helper" data-helper-for="decaf">Tick if you’d like it without caffeine.</div>
+    </div>
 
-<div id="price-display">Total: £0.00</div>
+    <div id="price-display">Total: £0.00</div>
 
-<button type="submit">Place Order</button>
+    <div class="summary-box" id="summary-box">
+      <div class="summary-title">Order summary</div>
+      <div id="summary-content">Fill in your drink details to see a summary here.</div>
+    </div>
 
-</form>
+    <div class="actions-row">
+      <button type="button" class="secondary-btn" id="save-favourite">Save as favourite</button>
+      <button type="button" class="secondary-btn" id="load-favourite">Load favourite</button>
+    </div>
 
-<div id="result"></div>
+    <button type="submit" id="submit-btn" disabled>Place Order</button>
+    <div class="status-text" id="status-text"></div>
+  </form>
 
-<script>
-const prices = {
-  coffee: {
-    Latte: 0.65,
-    Cappuccino: 0.70,
-    Americano: 0.45,
-    "Flat White": 0.65,
-    "Chocolate Mocha": 0.80,
-    Cortado: 0.60,
-    Macchiato: 0.40,
-    "Cold Brew (No Foam)": 0.50,
-    "Cold Brew (Foam)": 0.80
-  },
-  strength: {
-    Single: 0.00,
-    Double: 0.05
-  },
-  temp: {
-    Hot: 0,
-    Iced: 0.10
-  }
-};
+  <div id="result"></div>
 
-const form = document.getElementById("form");
-const priceDisplay = document.getElementById("price-display");
+  <script>
+    const prices = {
+      coffee: {
+        Latte: 0.65,
+        Cappuccino: 0.70,
+        Americano: 0.45,
+        "Flat White": 0.65,
+        "Chocolate Mocha": 0.80,
+        Cortado: 0.60,
+        Macchiato: 0.40,
+        "Cold Brew (No Foam)": 0.50,
+        "Cold Brew (Foam)": 0.80
+      },
+      strength: {
+        Single: 0.00,
+        Double: 0.05
+      },
+      temp: {
+        Hot: 0,
+        Iced: 0.10
+      }
+    };
 
-// 🔄 LIVE PRICE FUNCTION
-function updatePrice() {
-  const data = new FormData(form);
+    const form = document.getElementById("form");
+    const priceDisplay = document.getElementById("price-display");
+    const progressFill = document.getElementById("progress-fill");
+    const summaryContent = document.getElementById("summary-content");
+    const submitBtn = document.getElementById("submit-btn");
+    const statusText = document.getElementById("status-text");
+    const saveFavouriteBtn = document.getElementById("save-favourite");
+    const loadFavouriteBtn = document.getElementById("load-favourite");
 
-  const coffee = data.get("coffee");
-  const strength = data.get("strength");
-  const temp = data.get("temp");
+    const requiredFields = ["coffee", "strength", "temp", "name", "location", "day"];
 
-  let total =
-    (prices.coffee[coffee] || 0) +
-    (prices.strength[strength] || 0) +
-    (prices.temp[temp] || 0);
+    function sanitize(str) {
+      if (!str) return "";
+      return String(str)
+        .trim()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;")
+        .replace(/`/g, "&#96;");
+    }
 
-  priceDisplay.textContent = `Total: £${total.toFixed(2)}`;
-}
+    function getFormData() {
+      const data = new FormData(form);
+      const coffee = data.get("coffee");
+      const strength = data.get("strength");
+      const temp = data.get("temp");
+      const name = sanitize(data.get("name"));
+      const location = sanitize(data.get("location"));
+      const day = sanitize(data.get("day"));
+      const decaf = data.get("decaf") ? "Yes" : "No";
 
-// Listen for changes
-form.addEventListener("change", updatePrice);
+      let total = (prices.coffee[coffee] || 0) +
+                  (prices.strength[strength] || 0) +
+                  (prices.temp[temp] || 0);
 
-// 🚀 SUBMIT
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+      return {
+        coffee,
+        strength,
+        temp,
+        name,
+        location,
+        day,
+        decaf,
+        total: total
+      };
+    }
 
-  const data = new FormData(form);
+    // LIVE PRICE FUNCTION
+    function updatePrice() {
+      const { coffee, strength, temp, total } = getFormData();
+      const formatted = total.toFixed(2);
 
-  const order = {
-    name: data.get("name"),
-    coffee: data.get("coffee"),
-    strength: data.get("strength"),
-    temp: data.get("temp"),
-    decaf: data.get("decaf") ? "Yes" : "No",
-    location: data.get("location"),
-    day: data.get("day")
-  };
+      // Fix price display bug with proper template literal
+      priceDisplay.textContent = `Total: £${formatted}`;
 
-  // Validation
-  if (!order.coffee || !order.strength || !order.temp) {
-    alert("Please select all options");
-    return;
-  }
+      priceDisplay.classList.add("updated");
+      setTimeout(() => priceDisplay.classList.remove("updated"), 200);
 
-  order.total =
-    (prices.coffee[order.coffee] || 0) +
-    (prices.strength[order.strength] || 0) +
-    (prices.temp[order.temp] || 0);
+      updateSummary();
+      updateProgress();
+      validateForm();
+    }
 
-  order.total = order.total.toFixed(2);
+    function updateSummary() {
+      const data = getFormData();
+      if (!data.coffee && !data.name && !data.location) {
+        summaryContent.innerHTML = "Fill in your drink details to see a summary here.";
+        return;
+      }
 
-  const res = await fetch("/order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(order)
-  });
+      const lines = [];
+      if (data.name) lines.push(`<strong>Name:</strong> ${data.name}`);
+      if (data.coffee) {
+        const strengthText = data.strength ? `${data.strength} ` : "";
+        const tempText = data.temp ? `${data.temp} ` : "";
+        lines.push(`<strong>Drink:</strong> ${strengthText}${tempText}${data.coffee}`);
+      }
+      lines.push(`<strong>Decaf:</strong> ${data.decaf}`);
+      if (data.location) lines.push(`<strong>Location:</strong> ${data.location}`);
+      if (data.day) lines.push(`<strong>Day:</strong> ${data.day}`);
+      lines.push(`<strong>Estimated total:</strong> £${data.total.toFixed(2)}`);
 
-  const result = await res.json();
+      summaryContent.innerHTML = lines.join("<br>");
+    }
 
-  document.getElementById("result").innerHTML = `
-    <h3>✅ Order Complete</h3>
-    <p><strong>Order #:</strong> ${result.orderId}</p>
-    <p><strong>Total:</strong> £${order.total}</p>
-    <a href="/receipt/${result.pdf}" target="_blank">📄 Download PDF Receipt</a>
-  `;
-});
-</script>
+    function updateProgress() {
+      const data = new FormData(form);
+      let filled = 0;
+      requiredFields.forEach(name => {
+        const value = data.get(name);
+        if (value && String(value).trim() !== "") filled++;
+      });
+      const percent = (filled / requiredFields.length) * 100;
+      progressFill.style.width = `${percent}%`;
+    }
 
+    function showFieldError(name, message) {
+      const field = form.elements[name];
+      if (!field) return;
+      field.classList.add("error");
+      const helper = document.querySelector(`.helper[data-helper-for="${name}"]`);
+      if (helper) {
+        helper.textContent = message;
+        helper.classList.add("error-text");
+      }
+    }
+
+    function clearFieldError(name) {
+      const field = form.elements[name];
+      if (!field) return;
+      field.classList.remove("error");
+      const helper = document.querySelector(`.helper[data-helper-for="${name}"]`);
+      if (helper) {
+        // Reset to a neutral helper text if needed
+        const defaults = {
+          coffee: "Choose your base drink.",
+          strength: "Single is gentler, double is bolder.",
+          temp: "Hot for cozy, iced for refreshing.",
+          name: "What should we call out when it’s ready?",
+          location: "e.g. “London shop”, “Home delivery”, or a table number.",
+          day: "When is this for?",
+          decaf: "Tick if you’d like it without caffeine."
+        };
+        helper.textContent = defaults[name] || "";
+        helper.classList.remove("error-text");
+      }
+    }
+
+    function validateForm() {
+      const data = new FormData(form);
+      let allValid = true;
+
+      requiredFields.forEach(name => {
+        const value = data.get(name);
+        if (!value || String(value).trim() === "") {
+          allValid = false;
+          showFieldError(name, "This field is required.");
+        } else {
+          clearFieldError(name);
+        }
+      });
+
+      submitBtn.disabled = !allValid;
+      return allValid;
+    }
+
+    // Listen for changes
+    form.addEventListener("change", updatePrice);
+    form.addEventListener("input", updatePrice);
+
+    // FAVOURITE ORDER SAVE/LOAD
+    saveFavouriteBtn.addEventListener("click", () => {
+      const data = new FormData(form);
+      const favourite = {};
+      ["coffee", "strength", "temp", "name", "location", "day"].forEach(name => {
+        favourite[name] = data.get(name) || "";
+      });
+      favourite.decaf = !!data.get("decaf");
+      localStorage.setItem("lavenderFavourite", JSON.stringify(favourite));
+      statusText.textContent = "Favourite order saved.";
+      statusText.className = "status-text success";
+    });
+
+    loadFavouriteBtn.addEventListener("click", () => {
+      const stored = localStorage.getItem("lavenderFavourite");
+      if (!stored) {
+        statusText.textContent = "No favourite order saved yet.";
+        statusText.className = "status-text error";
+        return;
+      }
+      const favourite = JSON.parse(stored);
+      ["coffee", "strength", "temp", "name", "location", "day"].forEach(name => {
+        if (form.elements[name]) {
+          form.elements[name].value = favourite[name] || "";
+        }
+      });
+      form.elements["decaf"].checked = !!favourite.decaf;
+      statusText.textContent = "Favourite order loaded.";
+      statusText.className = "status-text success";
+      updatePrice();
+    });
+
+    // SUBMIT
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusText.textContent = "";
+      statusText.className = "status-text";
+
+      const isValid = validateForm();
+      if (!isValid) {
+        statusText.textContent = "Please fix the highlighted fields before placing your order.";
+        statusText.className = "status-text error";
+        return;
+      }
+
+      const order = getFormData();
+      order.total = order.total.toFixed(2);
+
+      // Small order summary confirmation
+      const summaryForConfirm =
+        `You’re ordering a ${order.strength} ${order.temp} ${order.coffee}` +
+        ` (${order.decaf === "Yes" ? "Decaf" : "Regular"})` +
+        ` for ${order.name} at ${order.location} on ${order.day}.` +
+        ` Total: £${order.total}.` +
+        `\n\nPlace this order?`;
+
+      const confirmed = window.confirm(summaryForConfirm);
+      if (!confirmed) {
+        statusText.textContent = "Order cancelled before submission.";
+        statusText.className = "status-text";
+        return;
+      }
+
+      // Loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Placing order...";
+      statusText.textContent = "Sending your order…";
+      statusText.className = "status-text";
+
+      try {
+        const res = await fetch("/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order)
+        });
+
+        // Error handling for failed fetch
+        if (!res.ok) {
+          throw new Error("Server returned an error.");
+        }
+
+        const result = await res.json();
+
+        document.getElementById("result").innerHTML = `
+          <h3>✅ Order Complete</h3>
+          <p><strong>Order #:</strong> ${sanitize(result.orderId)}</p>
+          <p><strong>Total:</strong> £${order.total}</p>
+          <a href="/receipt/${sanitize(result.pdf)}" target="_blank">📄 Download PDF Receipt</a>
+        `;
+
+        statusText.textContent = "Your order has been placed. Thank you.";
+        statusText.className = "status-text success";
+      } catch (err) {
+        console.error(err);
+        statusText.textContent = "Something went wrong placing your order. Please try again.";
+        statusText.className = "status-text error";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Place Order";
+      }
+    });
+
+    // Initial setup
+    updatePrice();
+  </script>
 </body>
 </html>
