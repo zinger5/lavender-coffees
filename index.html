@@ -84,7 +84,7 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
   <div class="particle"></div>
 </div>
 
-<h1>Lavender Coffees</h1>
+<h1>☕Lavender Coffees☕</h1>
 <p class="subtitle">A gentle cup, a tiny ritual. Build your drink just how you like it.</p>
 
 <form id="form" novalidate>
@@ -93,10 +93,10 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
   <select name="coffee" required>
     <option value="">--Select--</option>
     <option>Latte</option>
+    <option>Chocolate Mocha</option>
     <option>Cappuccino</option>
     <option>Americano</option>
     <option>Flat White</option>
-    <option>Chocolate Mocha</option>
     <option>Cortado</option>
     <option>Macchiato</option>
     <option>Cold Brew (No Foam)</option>
@@ -106,7 +106,7 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
 </div>
 
 <div class="field-wrapper">
-  <label>Strength</label>
+  <label>💪 Strength</label>
   <select name="strength" required>
     <option value="">--Select--</option>
     <option>Single</option>
@@ -116,7 +116,7 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
 </div>
 
 <div class="field-wrapper">
-  <label>Temperature</label>
+  <label>🔥Temperature❄️</label>
   <select name="temp" required>
     <option value="">--Select--</option>
     <option>Hot</option>
@@ -146,7 +146,7 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
 <div class="field-wrapper">
   <label>Email</label>
   <input name="email" type="email" required>
-  <div class="helper">We’ll send the receipt here.</div>
+  <div class="helper">We’ll pre-fill the email with your receipt.</div>
 </div>
 
 <div class="field-wrapper">
@@ -167,6 +167,7 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
 </div>
 
 <button type="submit" id="submit-btn">Place Order</button>
+<button type="button" id="email-receipt">Email Receipt</button>
 <div class="status-text" id="status-text"></div>
 </form>
 
@@ -174,24 +175,24 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
 
 <script>
 const prices = {
-  coffee: { Latte:0.65, Cappuccino:0.7, Americano:0.45, "Flat White":0.65, "Chocolate Mocha":0.8, Cortado:0.6, Macchiato:0.4, "Cold Brew (No Foam)":0.5, "Cold Brew (Foam)":0.8 },
-  strength: { Single:0, Double:0.05 },
-  temp: { Hot:0, Iced:0.1 }
+  coffee: { "Latte":0.65, "Cappuccino":0.7, "Americano":0.45, "Flat White":0.65, "Chocolate Mocha":0.8, "Cortado":0.6, "Macchiato":0.4, "Cold Brew (No Foam)":0.5, "Cold Brew (Foam)":0.8 },
+  strength: { "Single":0, "Double":0.05 },
+  temp: { "Hot":0, "Iced":0.1 }
 };
 
 const form = document.getElementById("form");
 const priceDisplay = document.getElementById("price-display");
-const submitBtn = document.getElementById("submit-btn");
-const statusText = document.getElementById("status-text");
 const summaryContent = document.getElementById("summary-content");
 
 function sanitize(str){ return str?String(str).replace(/</g,"&lt;").replace(/>/g,"&gt;"):""; }
+
 function getFormData(){
   const data = new FormData(form);
   const coffee = data.get("coffee");
   const strength = data.get("strength");
   const temp = data.get("temp");
   const total = (prices.coffee[coffee]||0)+(prices.strength[strength]||0)+(prices.temp[temp]||0);
+
   return {
     coffee,strength,temp,
     name:sanitize(data.get("name")),
@@ -208,7 +209,8 @@ function updatePrice(){
   priceDisplay.textContent = `Total: £${data.total}`;
   priceDisplay.classList.add("updated");
   setTimeout(()=>priceDisplay.classList.remove("updated"),300);
-  summaryContent.innerHTML = `
+
+  summaryContent.innerHTML = `  
     <p><strong>Coffee:</strong> ${data.coffee}</p>
     <p><strong>Strength:</strong> ${data.strength}</p>
     <p><strong>Temp:</strong> ${data.temp}</p>
@@ -222,40 +224,14 @@ function updatePrice(){
 }
 
 function validateForm(){
-  const data = getFormData();
-  submitBtn.disabled = !(data.coffee && data.strength && data.temp && data.name && data.location && data.day && data.email);
+  document.getElementById("submit-btn").disabled = !getFormData().email || !getFormData().coffee || !getFormData().strength || !getFormData().temp || !getFormData().name || !getFormData().location || !getFormData().day;
 }
 
 form.addEventListener("input",()=>{ updatePrice(); validateForm(); });
 form.addEventListener("change",()=>{ updatePrice(); validateForm(); });
 
-form.addEventListener("submit",(e)=>{
-  e.preventDefault();
-  submitBtn.disabled=true;
-  submitBtn.textContent="Placing order...";
-  statusText.textContent="";
-  const order = getFormData();
-  setTimeout(()=>{
-    const fakeOrderId = Math.floor(Math.random()*100000);
-    const fakePdf = `receipt-${fakeOrderId}.pdf`;
-    document.getElementById("result").innerHTML=`
-      <h3>✅ Order Complete</h3>
-      <p><strong>Order #:</strong> ${fakeOrderId}</p>
-      <p><strong>Total:</strong> £${order.total}</p>
-      <a href="${fakePdf}" target="_blank">📄 Download Receipt</a>
-    `;
-    statusText.textContent="Receipt sent to your email!";
-    statusText.classList.add("success");
-    submitBtn.disabled=false;
-    submitBtn.textContent="Place Order";
-  },800);
-});
-
-// Favourite drink using localStorage
-document.getElementById("save-favourite").addEventListener("click",()=>{
-  localStorage.setItem("favouriteCoffee", JSON.stringify(getFormData()));
-  alert("Favourite drink saved!");
-});
+// Save/load favourite
+document.getElementById("save-favourite").addEventListener("click",()=>{ localStorage.setItem("favouriteCoffee", JSON.stringify(getFormData())); alert("Favourite drink saved!"); });
 document.getElementById("load-favourite").addEventListener("click",()=>{
   const fav = JSON.parse(localStorage.getItem("favouriteCoffee"));
   if(fav){
@@ -272,7 +248,36 @@ document.getElementById("load-favourite").addEventListener("click",()=>{
   } else alert("No favourite saved.");
 });
 
-updatePrice(); validateForm();
+// Email receipt with table-like layout
+document.getElementById("email-receipt").addEventListener("click", () => {
+  const data = getFormData();
+  if (!data.email) { alert("Please enter your email first!"); return; }
+
+  const receipt = `
++----------------------------+
+|      LAVENDER COFFEES      |
++----------------------------+
+| Name     : ${data.name.padEnd(14)} |
+| Coffee   : ${data.coffee.padEnd(14)} |
+| Strength : ${data.strength.padEnd(14)} |
+| Temp     : ${data.temp.padEnd(14)} |
+| Decaf    : ${data.decaf.padEnd(14)} |
++----------------------------+
+| Location : ${data.location.padEnd(14)} |
+| Day      : ${data.day.padEnd(14)} |
+| Total    : £${data.total.padEnd(12)} |
++----------------------------+
+Thank you for your order! ☕💜
+`;
+
+  const subject = encodeURIComponent("☕ Lavender Coffee Receipt");
+  const body = encodeURIComponent(receipt);
+
+  window.location.href = `mailto:${data.email}?subject=${subject}&body=${body}`;
+});
+
+updatePrice(); 
+validateForm();
 </script>
 </body>
 </html>
