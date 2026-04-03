@@ -43,13 +43,17 @@ body::before {
 .particle:nth-child(5) { left: 80%; animation-duration: 20s; animation-delay: 3s; }
 @keyframes floatUp { 0%{transform:translateY(100vh) translateX(0);opacity:0;} 10%{opacity:0.8;} 50%{transform:translateY(50vh) translateX(-10px);} 100%{transform:translateY(-10vh) translateX(10px);opacity:0;} }
 
+/* Form Styles */
 form { background: rgba(255,255,255,0.95); padding: 25px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.15); backdrop-filter: blur(4px); }
 h1 { text-align:center; color:var(--lavender-dark); margin-bottom:10px; }
 .subtitle { text-align:center; color:#555; margin-bottom:20px; font-size:0.95rem; }
 label { font-weight:600; display:block; margin-top:10px; color:#444; }
 .field-wrapper { margin-bottom:12px; }
-select, input, button { width:100%; padding:10px; margin-top:4px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:0.95rem; }
+select, input, button { width:100%; padding:10px; margin-top:4px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:0.95rem; transition: all 0.3s ease; }
 select:focus, input:focus { outline:none; border-color:var(--lavender-dark); box-shadow:0 0 0 2px rgba(126,74,102,0.2); }
+/* Animation on select */
+select.animated { transform: scale(1.05); box-shadow: 0 0 12px rgba(126,74,102,0.4); }
+
 .helper { font-size:0.8rem; color:#777; margin-top:2px; min-height:14px; }
 .helper.error-text { color: var(--error); }
 
@@ -84,7 +88,7 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
   <div class="particle"></div>
 </div>
 
-<h1>☕Lavender Coffees☕</h1>
+<h1>☕ Lavender Coffees ☕</h1>
 <p class="subtitle">A gentle cup, a tiny ritual. Build your drink just how you like it.</p>
 
 <form id="form" novalidate>
@@ -92,15 +96,15 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
   <label>☕ Coffee Type</label>
   <select name="coffee" required>
     <option value="">--Select--</option>
-    <option>Latte</option>
-    <option>Chocolate Mocha</option>
-    <option>Cappuccino</option>
-    <option>Americano</option>
-    <option>Flat White</option>
-    <option>Cortado</option>
-    <option>Macchiato</option>
-    <option>Cold Brew (No Foam)</option>
-    <option>Cold Brew (Foam)</option>
+    <option>Latte ☕</option>
+    <option>Cappuccino 🥛</option>
+    <option>Americano ☕</option>
+    <option>Flat White 🥛</option>
+    <option>Chocolate Mocha 🍫</option>
+    <option>Cortado ☕</option>
+    <option>Macchiato ☕</option>
+    <option>Cold Brew (No Foam) ❄️</option>
+    <option>Cold Brew (Foam) ❄️☁️</option>
   </select>
   <div class="helper">Choose your base drink.</div>
 </div>
@@ -109,18 +113,18 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
   <label>💪 Strength</label>
   <select name="strength" required>
     <option value="">--Select--</option>
-    <option>Single</option>
-    <option>Double</option>
+    <option>Single 1️⃣</option>
+    <option>Double 2️⃣</option>
   </select>
   <div class="helper">Single is gentler, double is bolder.</div>
 </div>
 
 <div class="field-wrapper">
-  <label>🔥Temperature❄️</label>
+  <label>🔥 Temperature ❄️</label>
   <select name="temp" required>
     <option value="">--Select--</option>
-    <option>Hot</option>
-    <option>Iced</option>
+    <option>Hot 🔥</option>
+    <option>Iced ❄️</option>
   </select>
   <div class="helper">Hot for cozy, iced for refreshing.</div>
 </div>
@@ -171,13 +175,11 @@ button:disabled { background:#b9a4b3; cursor:not-allowed; box-shadow:none; trans
 <div class="status-text" id="status-text"></div>
 </form>
 
-<div id="result"></div>
-
 <script>
 const prices = {
-  coffee: { "Latte":0.65, "Cappuccino":0.7, "Americano":0.45, "Flat White":0.65, "Chocolate Mocha":0.8, "Cortado":0.6, "Macchiato":0.4, "Cold Brew (No Foam)":0.5, "Cold Brew (Foam)":0.8 },
-  strength: { "Single":0, "Double":0.05 },
-  temp: { "Hot":0, "Iced":0.1 }
+  coffee: { "Latte ☕":0.65, "Cappuccino 🥛":0.7, "Americano ☕":0.45, "Flat White 🥛":0.65, "Chocolate Mocha 🍫":0.8, "Cortado ☕":0.6, "Macchiato ☕":0.4, "Cold Brew (No Foam) ❄️":0.5, "Cold Brew (Foam) ❄️☁️":0.8 },
+  strength: { "Single 1️⃣":0, "Double 2️⃣":0.05 },
+  temp: { "Hot 🔥":0, "Iced ❄️":0.1 }
 };
 
 const form = document.getElementById("form");
@@ -224,14 +226,28 @@ function updatePrice(){
 }
 
 function validateForm(){
-  document.getElementById("submit-btn").disabled = !getFormData().email || !getFormData().coffee || !getFormData().strength || !getFormData().temp || !getFormData().name || !getFormData().location || !getFormData().day;
+  const data = getFormData();
+  document.getElementById("submit-btn").disabled = !data.email || !data.coffee || !data.strength || !data.temp || !data.name || !data.location || !data.day;
 }
+
+// Add animation on select
+form.querySelectorAll('select').forEach(sel => {
+  sel.addEventListener('change', e => {
+    e.target.classList.add('animated');
+    setTimeout(()=>e.target.classList.remove('animated'),500);
+    updatePrice();
+    validateForm();
+  });
+});
 
 form.addEventListener("input",()=>{ updatePrice(); validateForm(); });
 form.addEventListener("change",()=>{ updatePrice(); validateForm(); });
 
 // Save/load favourite
-document.getElementById("save-favourite").addEventListener("click",()=>{ localStorage.setItem("favouriteCoffee", JSON.stringify(getFormData())); alert("Favourite drink saved!"); });
+document.getElementById("save-favourite").addEventListener("click",()=>{
+  localStorage.setItem("favouriteCoffee", JSON.stringify(getFormData()));
+  alert("Favourite drink saved!");
+});
 document.getElementById("load-favourite").addEventListener("click",()=>{
   const fav = JSON.parse(localStorage.getItem("favouriteCoffee"));
   if(fav){
@@ -248,13 +264,11 @@ document.getElementById("load-favourite").addEventListener("click",()=>{
   } else alert("No favourite saved.");
 });
 
-// Email receipt with table-like layout
+// Email receipt
 document.getElementById("email-receipt").addEventListener("click", () => {
   const data = getFormData();
-  if (!data.email) { alert("Please enter your email first!"); return; }
-
-  const receipt = `
-+----------------------------+
+  if(!data.email){ alert("Please enter your email first!"); return; }
+  const receipt = `+----------------------------+
 |      LAVENDER COFFEES      |
 +----------------------------+
 | Name     : ${data.name.padEnd(14)} |
@@ -267,17 +281,13 @@ document.getElementById("email-receipt").addEventListener("click", () => {
 | Day      : ${data.day.padEnd(14)} |
 | Total    : £${data.total.padEnd(12)} |
 +----------------------------+
-Thank you for your order! ☕💜
-`;
-
-  const subject = encodeURIComponent("☕ Lavender Coffee Receipt");
-  const body = encodeURIComponent(receipt);
-
-  window.location.href = `mailto:${data.email}?subject=${subject}&body=${body}`;
+Thank you for your order! ☕💜`;
+  window.location.href = `mailto:${data.email}?subject=${encodeURIComponent("☕ Lavender Coffee Receipt")}&body=${encodeURIComponent(receipt)}`;
 });
 
 updatePrice(); 
 validateForm();
 </script>
+
 </body>
 </html>
