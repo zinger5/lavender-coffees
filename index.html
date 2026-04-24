@@ -8,115 +8,74 @@
 
 <style>
 :root {
-  --lavender-dark: #7e4a66;
-  --lavender-light: #f5e9f7;
-  --error: #c0392b;
-  --success: #2ecc71;
+  --lavender-dark:#7e4a66;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing:border-box; }
 
 body {
-  font-family: 'Quicksand', sans-serif;
-  background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
-  background-size: cover;
-  padding: 40px;
-  max-width: 600px;
-  margin: auto;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at top left, rgba(255,255,255,0.7), transparent),
-              linear-gradient(to bottom right, rgba(126,74,102,0.45), rgba(245,233,247,0.7));
-  z-index: -1;
-  pointer-events:none;
+  font-family:'Quicksand',sans-serif;
+  background:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+  background-size:cover;
+  padding:40px;
+  max-width:750px;
+  margin:auto;
 }
 
 form {
-  background: rgba(255,255,255,0.95);
-  padding: 25px;
+  background:rgba(255,255,255,0.95);
+  padding:25px;
   border-radius:12px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
 
-h1 {
+h1,h2 {
   text-align:center;
   color:var(--lavender-dark);
 }
 
 label {
-  font-weight:600;
   display:block;
   margin-top:10px;
+  font-weight:600;
 }
 
-select, input, button {
+select,input,button {
   width:100%;
   padding:10px;
-  margin-top:4px;
+  margin-top:6px;
   border-radius:8px;
   border:1px solid #ccc;
-  font-family:inherit;
-}
-
-.helper {
-  font-size:0.8rem;
-  color:#777;
-  margin-top:2px;
-  min-height:14px;
 }
 
 button {
-  background: var(--lavender-dark);
+  background:var(--lavender-dark);
   color:white;
   border:none;
   cursor:pointer;
-  margin-top:15px;
 }
 
-button:hover {
-  background:#9a5b7f;
-}
-
-.secondary-btn {
+#cart div {
   background:white;
-  color:var(--lavender-dark);
-  border:1px solid var(--lavender-dark);
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:8px;
 }
 
-#price-display {
-  font-size:1.2rem;
+#price {
+  font-size:2rem;
   font-weight:bold;
   text-align:center;
   margin:15px 0;
-  color:var(--lavender-dark);
+  padding:12px;
+  border-radius:10px;
   background:#f5e9f7;
-  padding:8px;
-  border-radius:8px;
+  color:var(--lavender-dark);
 }
 
-#summary-box {
-  background:#fdf7ff;
-  padding:10px;
-  border-radius:8px;
-  margin-top:10px;
-  font-size:0.9rem;
-}
-
-.status-text {
-  font-size:0.85rem;
-  margin-top:10px;
-}
-
-.status-text.success { color: var(--success); }
-.status-text.error { color: var(--error); }
-
-.actions-row {
-  display:flex;
-  gap:10px;
+.section-title {
+  margin-top:20px;
+  font-weight:700;
+  color:var(--lavender-dark);
 }
 </style>
 </head>
@@ -125,210 +84,188 @@ button:hover {
 
 <h1>☕ Lavender Coffees ☕</h1>
 
-<form id="form">
+<form id="form"
+action="https://formsubmit.co/cmurphy@lavender.enfield.sch.uk"
+method="POST">
 
-<label>☕Coffee Type☕</label>
+<!-- FORM SUBMIT SETTINGS -->
+<input type="hidden" name="_subject" value="New Coffee Order ☕">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_template" value="table">
+
+<!-- ORDER DATA SENT -->
+<input type="hidden" name="order_summary" id="order_summary">
+
+<!-- ☕ COFFEE -->
+<label>Coffee ☕</label>
 <select name="coffee" required>
-     <option value="">--Select--</option>
-    <option>Latte ☕</option>
-    <option>Cappuccino 🥛</option>
-    <option>Americano ☕</option>
-    <option>Flat White 🥛</option>
-    <option>Chocolate Mocha 🍫</option>
-    <option>Cortado ☕</option>
-    <option>Macchiato ☕</option>
-    <option>Cold Brew (No Foam) ❄️</option>
-    <option>Cold Brew (Foam) ❄️☁️</option>
+  <option value="">Select</option>
+  <option value="latte">Latte ☕</option>
+  <option value="cappuccino">Cappuccino 🥛</option>
+  <option value="americano">Americano ☕</option>
+  <option value="mocha">Mocha 🍫</option>
+  <option value="espresso">Espresso ⚡</option>
+  <option value="flatwhite">Flat White 🤍</option>
+  <option value="macchiato">Macchiato 🎯</option>
+  <option value="coldbrew_plain">Cold Brew (No Foam) 🧊</option>
+  <option value="coldbrew_foam">Cold Brew (Foam) ☁️</option>
 </select>
-<div class="helper">Choose your base drink.</div>
 
-<label>1️⃣Strength2️⃣</label>
+<!-- 📅 DATE -->
+<label class="section-title">📅 Order Date</label>
+<input type="date" name="date" required>
+
+<!-- ☕ STRENGTH -->
+<label>Strength</label>
 <select name="strength" required>
-  <option value="">--Select--</option>
-  <option>Single 1️⃣</option>
-  <option>Double 2️⃣</option>
+  <option value="">Select</option>
+  <option value="single">Single 1️⃣</option>
+  <option value="double">Double 2️⃣</option>
 </select>
-<div class="helper">Single is gentle, double is stronger.</div>
 
-<label>🔥Temperature❄️</label>
+<!-- 🌡️ TEMPERATURE -->
+<label class="section-title">🌡️ Temperature</label>
 <select name="temp" required>
-  <option value="">--Select--</option>
-  <option>Hot 🔥</option>
-  <option>Iced ❄️</option>
+  <option value="">Select</option>
+  <option value="hot">Hot 🔥</option>
+  <option value="iced">Iced ❄️</option>
 </select>
-<div class="helper">Hot for cosy, iced for refreshing.</div>
 
+<!-- 📍 LOCATION -->
+<label class="section-title">📍 Location</label>
+<input name="location" placeholder="Enter location" required>
+
+<!-- 👤 INFO -->
 <label>Name</label>
 <input name="name" required>
-<div class="helper">What name should we call?</div>
-
-<label>Location</label>
-<input name="location" required>
-<div class="helper">Shop / home / table number</div>
-
-<label>Day</label>
-<input name="day" required>
-<div class="helper">When is it for?</div>
 
 <label>Email</label>
 <input name="email" type="email" required>
-<div class="helper">For your receipt</div>
 
-<label>
-  <input type="checkbox" name="decaf"> Decaf
-</label>
-<div class="helper">No caffeine option</div>
+<!-- 💰 PRICE -->
+<div id="price">£0.00</div>
 
-<div id="price-display">Total: £0.00</div>
-
-<div id="summary-box">
-  Fill in your drink details to see a summary.
+<div class="actions">
+  <button type="button" id="add">Add ➕</button>
+  <button type="button" id="clear">Clear 🗑️</button>
 </div>
 
-<!-- FAVOURITES -->
-<div class="actions-row">
-  <button type="button" class="secondary-btn" id="save-fav">Save Favourite</button>
-  <button type="button" class="secondary-btn" id="load-fav">Load Favourite</button>
-</div>
-
-<button type="submit">Place Order</button>
-<button type="button" id="email">Email Receipt</button>
-
-<div class="status-text" id="status"></div>
+<button type="submit">Place Order ☕</button>
 
 </form>
 
+<h2>🛒 Cart</h2>
+<div id="cart">Empty 🛒</div>
+
 <script>
 const prices = {
-  coffee: {
-    "Latte ☕":0.65,
-    "Cappuccino 🥛":0.7,
-    "Americano ☕":0.45,
-    "Flat White 🥛":0.65
-    "Chocolate Mocha 🍫":0.8
-  "Cortado ☕":0.6
-  "Macchiato ☕":0.4
-  "Cold Brew (Foam) ❄️☁️":0.8
-  "Cold Brew (No Foam) ❄️":0.5
+  coffee:{
+    latte:0.65,
+    cappuccino:0.70,
+    americano:0.45,
+    mocha:0.85,
+    espresso:0.40,
+    flatwhite:0.75,
+    macchiato:0.45,
+    coldbrew_plain:0.50,
+    coldbrew_foam:0.80
   },
-  strength: {
-    "Single 1️⃣":0,
-    "Double 2️⃣":0.05
-  },
-  temp: {
-    "Hot 🔥":0,
-    "Iced ❄️":0.1
-  }
+  strength:{ single:0, double:0.05 },
+  temp:{ hot:0, iced:0.10 }
+};
+
+const names = {
+  latte:"Latte ☕",
+  cappuccino:"Cappuccino 🥛",
+  americano:"Americano ☕",
+  mocha:"Mocha 🍫",
+  espresso:"Espresso ⚡",
+  flatwhite:"Flat White 🤍",
+  macchiato:"Macchiato 🎯",
+  coldbrew_plain:"Cold Brew (No Foam) 🧊",
+  coldbrew_foam:"Cold Brew (Foam) ☁️"
 };
 
 const form = document.getElementById("form");
-const priceDisplay = document.getElementById("price-display");
-const summaryBox = document.getElementById("summary-box");
-const status = document.getElementById("status");
+const cartDiv = document.getElementById("cart");
+const priceDiv = document.getElementById("price");
+
+let cart = [];
 
 function getData(){
   const d = new FormData(form);
 
-  const coffee = d.get("coffee");
-  const strength = d.get("strength");
-  const temp = d.get("temp");
-
   const total =
-    (prices.coffee[coffee]||0) +
-    (prices.strength[strength]||0) +
-    (prices.temp[temp]||0);
+    (prices.coffee[d.get("coffee")] || 0) +
+    (prices.strength[d.get("strength")] || 0) +
+    (prices.temp[d.get("temp")] || 0);
 
   return {
-    coffee,
-    strength,
-    temp,
-    name:d.get("name"),
-    location:d.get("location"),
-    day:d.get("day"),
-    email:d.get("email"),
-    decaf:d.get("decaf") ? "Yes" : "No",
-    total:total.toFixed(2)
+    coffee: d.get("coffee"),
+    strength: d.get("strength"),
+    temp: d.get("temp"),
+    date: d.get("date"),
+    location: d.get("location"),
+    name: d.get("name"),
+    email: d.get("email"),
+    total: total.toFixed(2)
   };
 }
 
-function update(){
+// LIVE PRICE
+form.addEventListener("input", () => {
   const d = getData();
+  priceDiv.textContent = `£${d.total}`;
+});
 
-  priceDisplay.textContent = `Total: £${d.total}`;
+// ADD
+document.getElementById("add").onclick = () => {
+  cart.push(getData());
+  render();
+};
 
-  summaryBox.innerHTML = `
-    <b>Coffee:</b> ${d.coffee}<br>
-    <b>Strength:</b> ${d.strength}<br>
-    <b>Temp:</b> ${d.temp}<br>
-    <b>Decaf:</b> ${d.decaf}<br>
-    <b>Name:</b> ${d.name}<br>
-    <b>Location:</b> ${d.location}<br>
-    <b>Day:</b> ${d.day}<br>
-    <b>Total:</b> £${d.total}
-  `;
+// CLEAR
+document.getElementById("clear").onclick = () => {
+  cart = [];
+  render();
+};
+
+// RENDER CART
+function render(){
+  if(cart.length === 0){
+    cartDiv.innerHTML = "Empty 🛒";
+    return;
+  }
+
+  cartDiv.innerHTML = cart.map((i, idx) => `
+    <div>
+      ☕ ${names[i.coffee]} | 📅 ${i.date} | 📍 ${i.location} - £${i.total}
+      <button onclick="removeItem(${idx})">❌</button>
+    </div>
+  `).join("");
 }
 
-form.addEventListener("input", update);
+function removeItem(i){
+  cart.splice(i, 1);
+  render();
+}
 
-// VALIDATION + SUBMIT
+// SUBMIT → SEND EMAIL
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const d = getData();
+  if(cart.length === 0) cart.push(getData());
 
-  status.textContent = "Order submitted successfully ☕💜";
-  status.className = "status-text success";
+  const summary = cart.map(i =>
+    `Coffee: ${names[i.coffee]} | Date: ${i.date} | Location: ${i.location} | Total: £${i.total}`
+  ).join("\n");
 
-  console.log("ORDER:", d);
+  document.getElementById("order_summary").value = summary;
+
+  form.submit(); // sends to FormSubmit
 });
 
-// EMAIL RECEIPT (CLIENT)
-document.getElementById("email").addEventListener("click", () => {
-  const d = getData();
-
-  const receipt = `
-LAVENDER COFFEES
-
-Name: ${d.name}
-Coffee: ${d.coffee}
-Strength: ${d.strength}
-Temp: ${d.temp}
-Decaf: ${d.decaf}
-
-Location: ${d.location}
-Day: ${d.day}
-
-Total: £${d.total}
-
-Thank you! ☕💜
-`;
-
-  window.location.href =
-    `mailto:${d.email}?subject=${encodeURIComponent("Coffee Receipt")}&body=${encodeURIComponent(receipt)}`;
-});
-
-// FAVOURITES
-document.getElementById("save-fav").addEventListener("click", () => {
-  localStorage.setItem("coffeeFav", JSON.stringify(getData()));
-  alert("Saved!");
-});
-
-document.getElementById("load-fav").addEventListener("click", () => {
-  const fav = JSON.parse(localStorage.getItem("coffeeFav"));
-
-  if(!fav) return alert("No favourite saved");
-
-  form.coffee.value = fav.coffee;
-  form.strength.value = fav.strength;
-  form.temp.value = fav.temp;
-  form.name.value = fav.name;
-  form.location.value = fav.location;
-  form.day.value = fav.day;
-  form.email.value = fav.email;
-  form.decaf.checked = fav.decaf === "Yes";
-
-  update();
-});
+render();
 </script>
 
 </body>
